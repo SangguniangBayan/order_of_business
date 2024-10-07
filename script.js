@@ -230,8 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
             itemDiv.innerHTML = `
-                <h2>${item.title}</h2>
-                <p>${item.description}</p>
+               
                 
             `;
             dynamicContent.appendChild(itemDiv);
