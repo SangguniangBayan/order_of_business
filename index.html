@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,3 +56,62 @@
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order of Business - Sangguniang Bayan</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script> <!-- Link to your JavaScript file -->
+</head>
+<body>
+    <header>
+        <h1>ORDER OF BUSINESS</h1>
+        <h1>Sangguniang Bayan of Cordon, Isabela</h1>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#call-to-order">Call to Order</a></li>
+                <li><a href="#invocation">Invocation</a></li>
+                <li><a href="#national-anthem">National Anthem</a></li> 
+                <li><a href="#roll-call">Roll Call</a></li> 
+                <li><a href="#approval-minutes">Approval of Minutes</a></li>
+                <li><a href="#business-arising">Business Arising</a></li>
+                <li><a href="#question-hour" class="upload-item">Question Hour</a></li>
+                <li><a href="#first-reading" class="upload-item">First Reading</a></li>
+                <li><a href="#calendar-business" class="upload-item">Calendar of Business</a></li>
+                <li><a href="#proposed-ordinances" class="upload-item">Proposed Ordinances</a></li>
+                <li><a href="#other-matters" class="upload-item">Other Matters</a></li>
+                <li><a href="#privilege-hour">Privilege Hour</a></li>
+                <li><a href="#announcements" class="upload-item">Announcements</a></li>
+                <li><a href="#adjournment">Adjournment</a></li>
+                <li><button id="publish-button">Publish</button></li> <!-- Publish Button -->
+            </ul>
+        </nav>
+
+        <div id="content">
+            <div id="dynamic-content"></div> <!-- Area to display the clicked item -->
+        </div>
+    </div>
+
+    <div id="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Item</h2>
+            <form id="question-hour-form">
+                <label for="item-title">Title:</label>
+                <textarea class="item-title" id="item-title" placeholder="Enter Title" required></textarea>
+                <label for="item-file">Attach PDF:</label>
+                <input type="file" id="item-file" accept="application/pdf" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+
