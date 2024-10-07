@@ -5,13 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarLinks = document.querySelectorAll('.sidebar a');
     const dynamicContent = document.getElementById('dynamic-content');
     const publishButton = document.getElementById('publish-button');
+    const editButton = document.createElement('button'); // Create Edit button
 
     // Define sections with add buttons
     const sectionsWithAddButton = [
-        'Question Hour', 'First Reading', 'Proposed Ordinances', 
-        'Other Matters', 'Announcements', 'Unfinished Business', 
-        'Draft Ordinances and Resolutions', 'Committee Reports', 
-        'Review of SK and Barangay Resolutions Ordinances and Budgets', 
+        'Question Hour', 'First Reading', 'Proposed Ordinances',
+        'Other Matters', 'Announcements', 'Unfinished Business',
+        'Draft Ordinances and Resolutions', 'Committee Reports',
+        'Review of SK and Barangay Resolutions Ordinances and Budgets',
         'Review of CSO Applications', 'Unassigned Business'
     ];
 
@@ -159,17 +160,46 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // Publish button functionality
+    // Publish button functionality (with Edit button)
     publishButton.addEventListener('click', () => {
-        const headerClone = document.querySelector('header').outerHTML;
-        const sidebarClone = document.querySelector('.sidebar').cloneNode(true);
-        const publishButtonInSidebar = sidebarClone.querySelector('#publish-button');
-        if (publishButtonInSidebar) publishButtonInSidebar.remove();
+        // Save logic for uploaded PDFs and titles can be implemented here
 
-        const dynamicContentClone = document.getElementById('dynamic-content').cloneNode(true);
-        const buttons = dynamicContentClone.querySelectorAll('button');
-        buttons.forEach(button => button.remove());
-        
+        // Disable add and edit functionalities
+        const addItemButtons = document.querySelectorAll('.add-item');
+        addItemButtons.forEach(button => button.disabled = true);
+
+        const editItemButtons = document.querySelectorAll('.edit-item');
+        editItemButtons.forEach(button => button.disabled = true);
+
+        // Mark publish button as clicked
+        publishButton.textContent = 'Published';
+        publishButton.disabled = true;
+
+        // Add Edit button next to Publish button
+        editButton.textContent = 'Edit';
+        editButton.setAttribute('id', 'edit-button');
+        publishButton.parentElement.appendChild(editButton);
+
+        // Enable Edit button functionality
+        editButton.addEventListener('click', handleEditButtonClick);
+    });
+
+    // Edit button click handler (Prompt for admin credentials)
+    function handleEditButtonClick() {
+        const adminPassword = prompt('Enter Administrator Password:');
+
+        if (adminPassword === 'your_admin_password') { // Replace 'your_admin_password' with the actual password
+            // Re-enable editing functionality
+            const addItemButtons = document.querySelectorAll('.add-item');
+            addItemButtons.forEach(button => button.disabled = false);
+
+            const editItemButtons = document.querySelectorAll('.edit-item');
+            editItemButtons.forEach(button => button.disabled = false);
+        } else {
+            alert('Incorrect password. Access denied.');
+        }
+    }
+
     // Fetch data from MongoDB
     function fetchData() {
         fetch('/get-data')
