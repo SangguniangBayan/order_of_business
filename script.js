@@ -5,19 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarLinks = document.querySelectorAll('.sidebar a');
     const dynamicContent = document.getElementById('dynamic-content');
     const publishButton = document.getElementById('publish-button');
-    const editButton = document.createElement('button'); // Create Edit button
+    const editButton = document.getElementById('edit-button');
 
-    // Define sections with add buttons
-    const sectionsWithAddButton = [
-        'Question Hour', 'First Reading', 'Proposed Ordinances',
-        'Other Matters', 'Announcements', 'Unfinished Business',
-        'Draft Ordinances and Resolutions', 'Committee Reports',
-        'Review of SK and Barangay Resolutions Ordinances and Budgets',
-        'Review of CSO Applications', 'Unassigned Business'
-    ];
-
-    // To track item numbers for each section
-    const sectionCounters = {};
+    // Store uploaded items
+    const uploadedItems = {};
 
     // Sidebar link handling
     sidebarLinks.forEach(link => {
@@ -31,36 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle section-specific content
     function handleSectionDisplay(title) {
-        if (title === 'Calendar of Business') {
-            dynamicContent.innerHTML += `
-                <div>
-                    <h3>Unfinished Business <button class="add-item" data-section="unfinished-business">+</button></h3>
-                    <div id="unfinished-business"></div>
-                    <h3>For Second Reading</h3>
-                    <ul>
-                        <li>Draft Ordinances and Resolutions <button class="add-item" data-section="draft-ordinances">+</button></li>
-                        <div id="draft-ordinances"></div>
-                        <li>Committee Reports <button class="add-item" data-section="committee-reports">+</button></li>
-                        <div id="committee-reports"></div>
-                    </ul>
-                    <h3>Business for the Day</h3>
-                    <ul>
-                        <li>Review of Barangay & SK Resolutions, Ordinances and Budgets <button class="add-item" data-section="sk-resolutions">+</button></li>
-                        <div id="sk-resolutions"></div>
-                        <li>Review of CSO Applications <button class="add-item" data-section="cso-applications">+</button></li>
-                        <div id="cso-applications"></div>
-                    </ul>
-                    <h3>Unassigned Business <button class="add-item" data-section="unassigned-business">+</button></h3>
-                    <div id="unassigned-business"></div>
-                </div>
-            `;
-        } else if (sectionsWithAddButton.includes(title)) {
-            const sectionId = title.toLowerCase().replace(/\s/g, '-');
-            dynamicContent.innerHTML += `
-                <button class="add-item" data-section="${sectionId}">+</button>
-                <div id="${sectionId}"></div>
-            `;
-        }
+        // Create section-specific content based on title
+        const sectionId = title.toLowerCase().replace(/\s/g, '-');
+        dynamicContent.innerHTML += `
+            <div id="${sectionId}">
+                <h3>${title} <button class="add-item" data-section="${sectionId}">+</button></h3>
+                <div class="item-container" id="${sectionId}-container"></div>
+            </div>
+        `;
     }
 
     // Handle dynamic content actions (Add, Save, Edit)
@@ -79,17 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add new item
     function handleAddItem(button) {
         const sectionId = button.getAttribute('data-section');
-        const sectionContainer = document.getElementById(sectionId);
+        const sectionContainer = document.getElementById(sectionId + '-container');
 
-        if (!sectionContainer.querySelector('.item-title')) {
-            const itemContainer = document.createElement('div');
-            itemContainer.innerHTML = `
-                <textarea placeholder="Enter Title" class="item-title" rows="2" style="width: 100%;" required></textarea>
-                <input type="file" class="item-file" accept="application/pdf" required>
-                <button class="save-item" data-section="${sectionId}">Save</button>
-            `;
-            sectionContainer.appendChild(itemContainer);
-        }
+        const itemContainer = document.createElement('div');
+        itemContainer.innerHTML = `
+            <textarea placeholder="Enter Title" class="item-title" rows="2" style="width: 100%;" required></textarea>
+            <input type="file" class="item-file" accept="application/pdf" required>
+            <button class="save-item" data-section="${sectionId}">Save</button>
+        `;
+        sectionContainer.appendChild(itemContainer);
     }
 
     // Save new item
@@ -101,17 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!validateInputs(titleInput, fileInput)) return;
 
-        const sectionContainer = document.getElementById(sectionId);
-        const itemNumber = incrementSectionCounter(sectionId);
+        if (!uploadedItems[sectionId]) {
+            uploadedItems[sectionId] = [];
+        }
+        uploadedItems[sectionId].push({ title: titleInput, file: URL.createObjectURL(fileInput) });
 
-        const newItem = document.createElement('div');
-        newItem.innerHTML = `
-            <p>${itemNumber}. <a href="${URL.createObjectURL(fileInput)}" target="_blank">${titleInput}</a>
-            <button class="edit-item">Edit</button></p>
-        `;
+        displayUploadedItems(sectionId);
 
-        sectionContainer.appendChild(newItem);
-        itemContainer.remove();
+        // Clear the input fields after saving
+        itemContainer.innerHTML = '';
     }
 
     // Validate title and file inputs
@@ -123,81 +88,41 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     }
 
-    // Increment and track section counters
-    function incrementSectionCounter(sectionId) {
-        if (!sectionCounters[sectionId]) sectionCounters[sectionId] = 0;
-        return ++sectionCounters[sectionId];
+    // Display uploaded items
+    function displayUploadedItems(sectionId) {
+        const sectionContainer = document.getElementById(sectionId + '-container');
+        sectionContainer.innerHTML = ''; // Clear previous items
+
+        uploadedItems[sectionId].forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.innerHTML = `
+                <p>${index + 1}. <a href="${item.file}" target="_blank">${item.title}</a>
+                <button class="edit-item">Edit</button></p>
+            `;
+            sectionContainer.appendChild(itemDiv);
+        });
     }
 
-    // Edit existing item
-    function handleEditItem(button) {
-        const itemContainer = button.parentElement;
-        const titleLink = itemContainer.querySelector('a');
-        const currentTitle = titleLink.textContent;
-
-        itemContainer.innerHTML = `
-            <textarea class="edit-title" rows="2" style="width: 100%;">${currentTitle}</textarea>
-            <input type="file" class="edit-file" accept="application/pdf">
-            <button class="save-edit">Save</button>
-        `;
-    }
-
-    // Save edits
-    function handleSaveEdit(button) {
-        const itemContainer = button.parentElement;
-        const newTitle = itemContainer.querySelector('.edit-title').value.trim();
-        const newFile = itemContainer.querySelector('.edit-file').files[0];
-
-        if (!newTitle) {
-            alert("Title cannot be empty.");
-            return;
-        }
-
-        const fileUrl = newFile ? URL.createObjectURL(newFile) : itemContainer.querySelector('a').href;
-        itemContainer.innerHTML = `
-            <p><a href="${fileUrl}" target="_blank">${newTitle}</a>
-            <button class="edit-item">Edit</button></p>
-        `;
-    }
-
-    // Publish button functionality (with Edit button)
+    // Publish button functionality
     publishButton.addEventListener('click', () => {
-        // Save logic for uploaded PDFs and titles can be implemented here
+        // Disable functionalities
+        disableFunctionalities();
 
-        // Disable add and edit functionalities
-        const addItemButtons = document.querySelectorAll('.add-item');
-        addItemButtons.forEach(button => button.disabled = true);
-
-        const editItemButtons = document.querySelectorAll('.edit-item');
-        editItemButtons.forEach(button => button.disabled = true);
-
-        // Mark publish button as clicked
+        // Change publish button text
         publishButton.textContent = 'Published';
         publishButton.disabled = true;
-
-        // Add Edit button next to Publish button
-        editButton.textContent = 'Edit';
-        editButton.setAttribute('id', 'edit-button');
-        publishButton.parentElement.appendChild(editButton);
-
-        // Enable Edit button functionality
-        editButton.addEventListener('click', handleEditButtonClick);
+        editButton.style.display = 'inline-block'; // Show the Edit button after publish
     });
 
-    // Edit button click handler (Prompt for admin credentials)
-    function handleEditButtonClick() {
-        const adminPassword = prompt('Enter Administrator Password:');
+    // Disable functionalities like Add, Save, Edit
+    function disableFunctionalities() {
+        const addButtons = dynamicContent.querySelectorAll('.add-item');
+        const saveButtons = dynamicContent.querySelectorAll('.save-item');
+        const editButtons = dynamicContent.querySelectorAll('.edit-item');
 
-        if (adminPassword === 'sanggunian') { // PASSWORD HERE!!
-            // Re-enable editing functionality
-            const addItemButtons = document.querySelectorAll('.add-item');
-            addItemButtons.forEach(button => button.disabled = false);
-
-            const editItemButtons = document.querySelectorAll('.edit-item');
-            editItemButtons.forEach(button => button.disabled = false);
-        } else {
-            alert('Incorrect password. Access denied.');
-        }
+        addButtons.forEach(button => button.disabled = true);
+        saveButtons.forEach(button => button.disabled = true);
+        editButtons.forEach(button => button.disabled = true);
     }
 
     // Fetch data from MongoDB
@@ -219,8 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
             itemDiv.innerHTML = `
-               
-                
+                <p><a href="${item.fileUrl}" target="_blank">${item.title}</a></p>
             `;
             dynamicContent.appendChild(itemDiv);
         });
