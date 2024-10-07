@@ -169,48 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dynamicContentClone = document.getElementById('dynamic-content').cloneNode(true);
         const buttons = dynamicContentClone.querySelectorAll('button');
         buttons.forEach(button => button.remove());
-
-        const viewerHtml = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>View Only Mode - Order of Business</title>
-                <link rel="stylesheet" href="style.css">
-            </head>
-            <body>
-                ${headerClone}
-                <div class="container">
-                    ${sidebarClone.outerHTML}
-                    <div id="content">
-                        ${dynamicContentClone.innerHTML}
-                    </div>
-                </div>
-            </body>
-            </html>
-        `;
-
-        const viewerWindow = window.open('', '_blank');
-        viewerWindow.document.write(viewerHtml);
-        viewerWindow.document.close();
-
-        downloadFile('viewer.html', viewerHtml);
-        publishButton.textContent = 'Published';
-        publishButton.disabled = true;
-    });
-
-    // Download the viewer file
-    function downloadFile(filename, content) {
-        const element = document.createElement('a');
-        const file = new Blob([content], { type: 'text/html' });
-        element.href = URL.createObjectURL(file);
-        element.download = filename;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    }
-
+        
     // Fetch data from MongoDB
     function fetchData() {
         fetch('/get-data')
