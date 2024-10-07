@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 const express = require('express');
 const path = require('path');
 const { MongoClient } = require('mongodb');
@@ -48,7 +48,7 @@ app.get('/get-data', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-=======
+
 const express = require('express');
 const path = require('path');
 const { MongoClient } = require('mongodb');
@@ -98,4 +98,4 @@ app.get('/get-data', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
->>>>>>> e848cf91a8e345524138656fefd95cfc020e1d87
+
