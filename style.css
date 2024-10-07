@@ -1,0 +1,227 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+header {
+    background-color: #030446;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.container {
+    display: flex;
+    margin-top: 80px; /* Adjusted to leave space for the fixed header */
+    height: calc(100vh - 80px);
+    overflow: hidden;
+}
+
+.sidebar {
+    background-color: #787a7b;
+    width: 250px;
+    padding: 2rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 15px 0;
+}
+
+.sidebar a {
+    color: rgb(21, 6, 181);
+    text-decoration: none;
+    display: block;
+    padding: 1px;
+    text-transform: uppercase;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #919395;
+    color: #fff; /* Make text stand out when hovering */
+}
+
+#content {
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow-y: auto;
+    height: calc(100% - 4rem);
+    width: calc(100% - 250px); /* Adjust based on sidebar width */
+    flex-grow: 1; /* Allow content area to grow */
+}
+
+h1 {
+    color: white;
+    margin: 0;
+}
+
+h2 {
+    color: #34495e;
+    margin: 20px 0;
+}
+
+h1 + h1 {
+    margin-top: 2px;
+}
+
+ul {
+    padding-left: 1.5rem;
+}
+
+ul ul {
+    padding-left: 1rem;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #787a7b;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f4f4f4;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark background with transparency */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px; /* Added max-width for better responsiveness */
+    border-radius: 8px;
+    transition: opacity 0.3s ease; /* Added transition for modal appearance */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Title and PDF rows styling */
+.title-row, .pdf-row {
+    margin-bottom: 10px;
+}
+
+.title-row strong, .pdf-row strong {
+    display: inline-block;
+    width: 150px;
+}
+
+.title-row a, .pdf-row a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.title-row a:hover, .pdf-row a:hover {
+    text-decoration: underline;
+}
+
+/* Title input box styling */
+.item-title {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-variant-caps: titling-caps;
+    border: 1px solid #ccc; /* Added border for input field */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background for input */
+}
+
+/* Button styles */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 1px 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom:auto;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+    }
+
+    #content {
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+    }
+}
+#publish-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px; /* Add some spacing from the last item */
+    width: 100%; /* Make it full width */
+    text-transform: uppercase; /* Consistent with other links */
+}
+
+#publish-button:hover {
+    background-color: #0056b3; /* Darker on hover */
+}
