@@ -227,8 +227,7 @@ document.addEventListener("DOMContentLoaded", function() {
             itemDiv.innerHTML = `
                 <h2>${item.title}</h2>
                 <p>${item.description}</p>
-                <a href="${item.fileUrl}" target="_blank">Download PDF</a>
-            `;
+            ;
             dynamicContent.appendChild(itemDiv);
         });
     }
