@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleEditButtonClick() {
         const adminPassword = prompt('Enter Administrator Password:');
 
-        if (adminPassword === 'your_admin_password') { // Replace 'your_admin_password' with the actual password
+        if (adminPassword === 'sanggunian') { // PASSWORD HERE!!
             // Re-enable editing functionality
             const addItemButtons = document.querySelectorAll('.add-item');
             addItemButtons.forEach(button => button.disabled = false);
