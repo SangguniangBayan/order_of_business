@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarLinks = document.querySelectorAll('.sidebar a');
     const dynamicContent = document.getElementById('dynamic-content');
     const publishButton = document.getElementById('publish-button');
+    const saveButton = document.getElementById('save-button');
     const editButton = document.getElementById('edit-button');
 
     // Store uploaded items
@@ -22,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle section-specific content
     function handleSectionDisplay(title) {
-        // Create section-specific content based on title
         const sectionId = title.toLowerCase().replace(/\s/g, '-');
         dynamicContent.innerHTML += `
             <div id="${sectionId}">
@@ -114,6 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
         editButton.style.display = 'inline-block'; // Show the Edit button after publish
     });
 
+    // Save button functionality
+    saveButton.addEventListener('click', () => {
+        // Save the current uploaded items in the page
+        localStorage.setItem('uploadedItems', JSON.stringify(uploadedItems));
+        alert("Items saved successfully!");
+    });
+
     // Disable functionalities like Add, Save, Edit
     function disableFunctionalities() {
         const addButtons = dynamicContent.querySelectorAll('.add-item');
@@ -127,13 +134,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch data from MongoDB
     function fetchData() {
-        fetch('/get-data')
-            .then(response => response.json())
-            .then(data => displayData(data))
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                dynamicContent.innerHTML = '<p>Failed to load data. Please try again later.</p>';
-            });
+        // Check if there's saved data in localStorage
+        const savedItems = localStorage.getItem('uploadedItems');
+        if (savedItems) {
+            Object.assign(uploadedItems, JSON.parse(savedItems));
+            displayAllUploadedItems();
+        }
+        // You can uncomment the below line if you want to fetch from MongoDB
+        // fetch('/get-data').then(response => response.json()).then(data => displayData(data)).catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Display all uploaded items
+    function displayAllUploadedItems() {
+        for (const sectionId in uploadedItems) {
+            displayUploadedItems(sectionId);
+        }
     }
 
     // Display fetched data
