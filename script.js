@@ -149,17 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Helper function to download file
-    function downloadFile(filename, content) {
-        const element = document.createElement('a');
-        const file = new Blob([content], { type: 'text/html' });
-        element.href = URL.createObjectURL(file);
-        element.download = filename;
-        document.body.appendChild(element); // Required for Firefox
-        element.click();
-        document.body.removeChild(element);
-    }
-
     // Publish button functionality
     const publishButton = document.getElementById('publish-button');
     publishButton.addEventListener('click', () => {
