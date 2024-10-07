@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebarLinks.forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
-            const title = link.textContent.trim();
+            const title = link.textContent.trim() || 'Untitled Section';  // Fallback if title is missing
             dynamicContent.innerHTML = `<h2>${title}</h2>`;
 
             // Handle the "Calendar of Business" section specifically
@@ -202,9 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
         publishButton.disabled = true;
     });
 });
-// Your existing code (if any) goes here
 
-// This code fetches data from MongoDB when the document is loaded
+// Fetch data from MongoDB when the document is loaded
 document.addEventListener("DOMContentLoaded", function() {
     fetchData();
 
@@ -222,13 +221,33 @@ document.addEventListener("DOMContentLoaded", function() {
         dynamicContent.innerHTML = ''; // Clear previous content
 
         data.forEach(item => {
+            const title = item.title || 'Untitled Section';  // Fallback if title is missing
+            const fileUrl = item.fileUrl || '#';  // Fallback for missing file URL
+
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('item');
             itemDiv.innerHTML = `
-                <h2>${item.title}</h2>
-                <p>${item.description}</p>
-            ;
+                <h2>${title}</h2>
+                <p>${item.description || 'No description available'}</p>  <!-- Fallback if description is missing -->
+                ${fileUrl !== '#' ? `<a href="${fileUrl}" target="_blank">Download PDF</a>` : '<p>No PDF available</p>'}
+            `;
             dynamicContent.appendChild(itemDiv);
         });
     }
 });
+
+// Helper function to download the viewer.html file
+function downloadFile(filename, content) {
+    const element = document.createElement('a');
+    const blob = new Blob([content], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    element.setAttribute('href', url);
+    element.setAttribute('download', filename);
+
+    document.body.appendChild(element);
+    element.click();
+
+    // Clean up the URL
+    URL.revokeObjectURL(url);
+    element.remove();
+}
